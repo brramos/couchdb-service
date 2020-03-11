@@ -4,7 +4,7 @@ const {
     COUCHDB_URL,
     API_KEY,
     API_KEY_PASSWORD
-} = require('../config')
+} = require('config')
 
 const getAllDatabases = () => {
     return new Promise(((resolve, reject) => {
