@@ -27,7 +27,7 @@ const getAllDatabases = () => {
     }))
 }
 
-const getDocuments = (database, docType) => {
+const getDocumentsByType = (database, docType) => {
     return new Promise(((resolve, reject) => {
         const auth = btoa(`${API_KEY}:${API_KEY_PASSWORD}`)
         var options = {
@@ -48,6 +48,28 @@ const getDocuments = (database, docType) => {
         }
 
         request.post(options, (err, resp, docs) => {
+            if (err) {
+                reject(err)
+            } else {
+                resolve(docs)
+            }
+        })
+    }))
+}
+
+const getAllDocuments = database => {
+    return new Promise(((resolve, reject) => {
+        const auth = btoa(`${API_KEY}:${API_KEY_PASSWORD}`)
+        var options = {
+            url:  `${COUCHDB_URL}${database}/_all_docs`,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Basic ${auth}`
+            },
+            json: true
+        }
+
+        request.get(options, (err, resp, docs) => {
             if (err) {
                 reject(err)
             } else {
@@ -102,10 +124,33 @@ const deleteDocument = (database, id, revision) => {
     }))
 }
 
+const getChangeFeed = database => {
+    return new Promise(((resolve, reject) => {
+        const auth = btoa(`${API_KEY}:${API_KEY_PASSWORD}`)
+        var options = {
+            url:  `${COUCHDB_URL}${database}/_changes`,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Basic ${auth}`
+            },
+            json: true
+        }
+
+        request.get(options, (err, resp, docs) => {
+            if (err) {
+                reject(err)
+            } else {
+                resolve(docs)
+            }
+        })
+    }))
+}
 
 module.exports = {
     getAllDatabases,
-    getDocuments,
+    getDocumentsByType,
+    getAllDocuments,
     addDocument,
-    deleteDocument
+    deleteDocument,
+    getChangeFeed
 }
