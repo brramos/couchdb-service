@@ -146,11 +146,48 @@ const getChangeFeed = database => {
     }))
 }
 
+const createDesignDoc = (name, mapFn) => {
+    const ddoc = {
+        _id: '_design/' + name,
+        views: {}
+    }
+    ddoc.views[name] = {
+        map: mapFn.toString()
+    }
+    return ddoc
+}
+
+const addDesignDoc = (database, name, designDoc) => {
+    return new Promise(((resolve, reject) => {
+        const auth = btoa(`${API_KEY}:${API_KEY_PASSWORD}`)
+        var options = {
+            url:  `${COUCHDB_URL}${database}/_design/${name}`,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Basic ${auth}`
+            },
+            body: designDoc,
+            json: true
+        }
+
+        request.put(options, (err, resp, doc) => {
+            if (err) {
+                reject(err)
+            } else {
+                // todo: query doc to init
+                resolve(doc)
+            }
+        })
+    }))
+}
+
 module.exports = {
     getAllDatabases,
     getDocumentsByType,
     getAllDocuments,
     addDocument,
     deleteDocument,
-    getChangeFeed
+    getChangeFeed,
+    createDesignDoc,
+    addDesignDoc
 }
