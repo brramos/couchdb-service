@@ -248,7 +248,7 @@ const updateDocument = (database, doc) => {
     }))
 }
 
-const bulkDelete = (database, docs) => {
+const bulkDocs = (database, docs) => {
     return new Promise(((resolve, reject) => {
         const auth = btoa(`${API_KEY}:${API_KEY_PASSWORD}`)
         var options = {
@@ -283,5 +283,5 @@ module.exports = {
     queryDesignDoc,
     getDocument,
     updateDocument,
-    bulkDelete
+    bulkDocs
 }
