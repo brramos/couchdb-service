@@ -248,6 +248,29 @@ const updateDocument = (database, doc) => {
     }))
 }
 
+const bulkDelete = (database, docs) => {
+    return new Promise(((resolve, reject) => {
+        const auth = btoa(`${API_KEY}:${API_KEY_PASSWORD}`)
+        var options = {
+            url:  `${COUCHDB_URL}${database}/_bulk_docs`,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Basic ${auth}`
+            },
+            body: docs,
+            json: true
+        }
+
+        request.post(options, (err, resp, docs) => {
+            if (err) {
+                reject(err)
+            } else {
+                resolve(docs)
+            }
+        })
+    }))
+}
+
 module.exports = {
     getAllDatabases,
     getDocumentsByType,
@@ -259,5 +282,6 @@ module.exports = {
     addDesignDoc,
     queryDesignDoc,
     getDocument,
-    updateDocument
+    updateDocument,
+    bulkDelete
 }

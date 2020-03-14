@@ -1,6 +1,6 @@
 {
   "name": "couchdb-service",
-  "version": "1.5.1",
+  "version": "1.6.0",
   "description": "CouchDB Service for CRUD and other common database tasks",
   "main": "index.js",
   "scripts": {
