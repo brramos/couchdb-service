@@ -203,6 +203,28 @@ const queryDesignDoc = (database, doc, key) => {
     }))
 }
 
+const getDocument = (database, doc) => {
+    return new Promise(((resolve, reject) => {
+        const auth = btoa(`${API_KEY}:${API_KEY_PASSWORD}`)
+        var options = {
+            url:  `${COUCHDB_URL}${database}/${doc}`,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Basic ${auth}`
+            },
+            json: true
+        }
+
+        request.get(options, (err, resp, doc) => {
+            if (err) {
+                reject(err)
+            } else {
+                resolve(doc)
+            }
+        })
+    }))
+}
+
 module.exports = {
     getAllDatabases,
     getDocumentsByType,
@@ -212,5 +234,6 @@ module.exports = {
     getChangeFeed,
     createDesignDoc,
     addDesignDoc,
-    queryDesignDoc
+    queryDesignDoc,
+    getDocument
 }
