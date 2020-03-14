@@ -181,7 +181,7 @@ const addDesignDoc = (database, name, designDoc) => {
     }))
 }
 
-const queryDesignDoc = (doc, key) => {
+const queryDesignDoc = (database, doc, key) => {
     return new Promise(((resolve, reject) => {
         const auth = btoa(`${API_KEY}:${API_KEY_PASSWORD}`)
         var options = {
