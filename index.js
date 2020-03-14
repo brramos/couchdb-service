@@ -225,16 +225,16 @@ const getDocument = (database, doc) => {
     }))
 }
 
-const updateDocument = (database, doc, rev) => {
+const updateDocument = (database, doc) => {
     return new Promise(((resolve, reject) => {
         const auth = btoa(`${API_KEY}:${API_KEY_PASSWORD}`)
         var options = {
-            url:  `${COUCHDB_URL}${database}/${doc}?rev=${rev}`,
+            url:  `${COUCHDB_URL}${database}/${doc._id}?rev=${doc._rev}`,
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Basic ${auth}`
             },
-            body: designDoc,
+            body: doc,
             json: true
         }
 
