@@ -61,7 +61,7 @@ const getAllDocuments = database => {
     return new Promise(((resolve, reject) => {
         const auth = btoa(`${API_KEY}:${API_KEY_PASSWORD}`)
         var options = {
-            url:  `${COUCHDB_URL}${database}/_all_docs`,
+            url:  `${COUCHDB_URL}${database}/_all_docs?include_docs=true`,
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Basic ${auth}`
@@ -185,7 +185,7 @@ const queryDesignDoc = (database, doc, key) => {
     return new Promise(((resolve, reject) => {
         const auth = btoa(`${API_KEY}:${API_KEY_PASSWORD}`)
         var options = {
-            url:  `${COUCHDB_URL}${database}/_design/${doc}/_view/${doc}?start_key=${key}&end_key=${key}&include_docs=true`,
+            url:  `${COUCHDB_URL}${database}/_design/${doc}/_view/${doc}?start_key="${key}"&end_key="${key}"&include_docs=true`,
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Basic ${auth}`
@@ -271,6 +271,50 @@ const bulkDocs = (database, docs) => {
     }))
 }
 
+const getRevisions = (database, doc) => {
+    return new Promise(((resolve, reject) => {
+        const auth = btoa(`${API_KEY}:${API_KEY_PASSWORD}`)
+        var options = {
+            url:  `${COUCHDB_URL}${database}/${doc}?revs=true&open_revs=all`,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Basic ${auth}`
+            },
+            json: true
+        }
+
+        request.get(options, (err, resp, doc) => {
+            if (err) {
+                reject(err)
+            } else {
+                resolve(doc)
+            }
+        })
+    }))
+}
+
+const getRevision = (database, doc, rev) => {
+    return new Promise(((resolve, reject) => {
+        const auth = btoa(`${API_KEY}:${API_KEY_PASSWORD}`)
+        var options = {
+            url:  `${COUCHDB_URL}${database}/${doc}?rev=${rev}`,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Basic ${auth}`
+            },
+            json: true
+        }
+
+        request.get(options, (err, resp, doc) => {
+            if (err) {
+                reject(err)
+            } else {
+                resolve(doc)
+            }
+        })
+    }))
+}
+
 module.exports = {
     getAllDatabases,
     getDocumentsByType,
@@ -283,5 +327,7 @@ module.exports = {
     queryDesignDoc,
     getDocument,
     updateDocument,
-    bulkDocs
+    bulkDocs,
+    getRevisions,
+    getRevision
 }
