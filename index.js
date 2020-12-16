@@ -128,7 +128,7 @@ const getChangeFeed = database => {
     return new Promise(((resolve, reject) => {
         const auth = btoa(`${API_KEY}:${API_KEY_PASSWORD}`)
         var options = {
-            url:  `${COUCHDB_URL}${database}/_changes`,
+            url:  `${COUCHDB_URL}${database}/_changes?include_docs=true`,
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Basic ${auth}`
@@ -315,6 +315,27 @@ const getRevision = (database, doc, rev) => {
     }))
 }
 
+const setRoles = (database, security) => {
+    return new Promise(((resolve, reject) => {
+        const auth = btoa(`${API_KEY}:${API_KEY_PASSWORD}`)
+        var options = {
+            url:  `${COUCHDB_URL}${database}/_security`,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Basic ${auth}`
+            },
+            body: security,
+            json: true
+        }
+        request.put(options, (err, resp, docs) => {
+            if (err) {
+                reject(err)
+            } else {
+                resolve(docs)
+            }
+        })
+    }))
+}
 module.exports = {
     getAllDatabases,
     getDocumentsByType,
@@ -329,5 +350,6 @@ module.exports = {
     updateDocument,
     bulkDocs,
     getRevisions,
-    getRevision
+    getRevision,
+    setRoles
 }
